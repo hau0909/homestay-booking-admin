@@ -1,21 +1,42 @@
 "use client";
 import { SidebarItem } from "@/src/components/layout/SidebarItem";
+import { useAuth } from "@/src/contexts/AuthContext";
 import {
   Cat,
   ClipboardList,
   Contact2,
   Gauge,
+  Loader2,
   MessageSquareWarning,
   Settings,
   Ticket,
   User2,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { session, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !session) {
+      router.replace("/auth");
+    }
+  }, [loading, session, router]);
+
+  if (loading || !session) {
+    return (
+      <div className="flex justify-center animate-spin mt-70 text-[#11009E]">
+        <Loader2 size={40} />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex ">
       {/* Sidebar */}
