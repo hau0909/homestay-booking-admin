@@ -5,6 +5,7 @@ export const viewAllBecomeHostRequest = async () => {
     .from("host_applications")
     .select(
       `id,
+      user_id,
       status,
       identity_card_front_url,
       identity_card_back_url,
@@ -29,6 +30,7 @@ export const viewHostRequestDetail = async (hostRequestId: string) => {
     .select(
       `
       id,
+      user_id,
       status,
       identity_card_front_url,
       identity_card_back_url,
@@ -39,6 +41,7 @@ export const viewHostRequestDetail = async (hostRequestId: string) => {
         avatar_url,
         bio,
         phone,
+        is_host,
         identity_card
       )
     `,
