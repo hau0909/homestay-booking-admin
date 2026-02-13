@@ -1,0 +1,186 @@
+[1mdiff --git a/app/(dashboard)/listings/page.tsx b/app/(dashboard)/listings/page.tsx[m
+[1mnew file mode 100644[m
+[1mindex 0000000..1035b71[m
+[1m--- /dev/null[m
+[1m+++ b/app/(dashboard)/listings/page.tsx[m
+[36m@@ -0,0 +1,392 @@[m
+[32m+[m[32m"use client";[m
+[32m+[m[32mimport { useEffect, useState } from "react";[m
+[32m+[m[32mimport { Eye, X } from "lucide-react";[m
+[32m+[m[32mimport {[m
+[32m+[m[32m  getAllListings,[m
+[32m+[m[32m  ListingWithHost,[m
+[32m+[m[32m} from "@/src/services/listing/getAllListings";[m
+[32m+[m[32mimport { updateListingStatus } from "@/src/services/listing/updateListingStatus";[m
+[32m+[m[32mimport { ListingStatus } from "@/src/types/enums";[m
+[32m+[m
+[32m+[m[32mimport { Badge } from "@/components/ui/badge";[m
+[32m+[m[32mimport { Button } from "@/components/ui/button";[m
+[32m+[m[32mimport {[m
+[32m+[m[32m  Table,[m
+[32m+[m[32m  TableHeader,[m
+[32m+[m[32m  TableBody,[m
+[32m+[m[32m  TableHead,[m
+[32m+[m[32m  TableRow,[m
+[32m+[m[32m  TableCell,[m
+[32m+[m[32m} from "@/components/ui/table";[m
+[32m+[m[32mimport toast from "react-hot-toast";[m
+[32m+[m
+[32m+[m[32mexport default function AdminListingsPage() {[m
+[32m+[m[32m  const [listings, setListings] = useState<ListingWithHost[]>([]);[m
+[32m+[m[32m  const [loading, setLoading] = useState(true);[m
+[32m+[m[32m  const [selectedListing, setSelectedListing] =[m
+[32m+[m[32m    useState<ListingWithHost | null>(null);[m
+[32m+[m[32m  const [previewImage, setPreviewImage] =[m
+[32m+[m[32m    useState<string | null>(null);[m
+[32m+[m[32m  useEffect(() => {[m
+[32m+[m[32m    loadListings();[m
+[32m+[m[32m  }, []);[m
+[32m+[m[32mconst [search, setSearch] = useState("");[m
+[32m+[m
+[32m+[m[32m  async function loadListings() {[m
+[32m+[m[32m    try {[m
+[32m+[m[32m      setLoading(true);[m
+[32m+[m[32m      const data = await getAllListings();[m
+[32m+[m[32m      setListings(data);[m
+[32m+[m[32m    } finally {[m
+[32m+[m[32m      setLoading(false);[m
+[32m+[m[32m    }[m
+[32m+[m[32m  }[m
+[32m+[m[32m  //search[m
+[32m+[m[32mconst filteredListings = listings.filter((listing) => {[m
+[32m+[m[32m  const keyword = search.toLowerCase();[m
+[32m+[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    listing.title?.toLowerCase().includes(keyword) ||[m
+[32m+[m[32m    listing.host?.full_name?.toLowerCase().includes(keyword)[m
+[32m+[m[32m  );[m
+[32m+[m[32m});[m
+[32m+[m
+[32m+[m[32m  async function handleUpdateStatus([m
+[32m+[m[32m  listingId: number,[m
+[32m+[m[32m  status: ListingStatus[m
+[32m+[m[32m) {[m
+[32m+[m[32m  await updateListingStatus(listingId, status);[m
+[32m+[m
+[32m+[m[32m  setListings((prev) =>[m
+[32m+[m[32m    prev.map((l) =>[m
+[32m+[m[32m      l.id === listingId ? { ...l, status } : l[m
+[32m+[m[32m    )[m
+[32m+[m[32m  );[m
+[32m+[m
+[32m+[m[32m  setSelectedListing(null);[m
+[32m+[m
+[32m+[m[32m  toast.success([m
+[32m+[m[32m    status === "ACTIVE"[m
+[32m+[m[32m      ? "Listing approved successfully!"[m
+[32m+[m[32m      : "Listing rejected successfully!"[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <div className="p-6 space-y-6">[m
+[32m+[m[32m      <h1 className="text-2xl font-semibold">[m
+[32m+[m[32m        All Listings[m
+[32m+[m[32m      </h1>[m
+[32m+[m
+[32m+[m[32m{/* SEARCH */}[m
+[32m+[m[32m      <div className="flex justify-end my-4">[m
+[32m+[m[32m  <div className="relative w-[380px]">[m
+[32m+[m[32m    <input[m
+[32m+[m[32m      type="text"[m
+[32m+[m[32m      placeholder="Search by host or title..."[m
+[32m+[m[32m      value={search}[m
+[32m+[m[32m      onChange={(e) => setSearch(e.target.value)}[m
+[32m+[m[32m      className="w-full bg-white border rounded-xl px-4 py-2 pr-8 text-sm shadow-sm focus:outline-none"[m
+[32m+[m[32m    />[m
+[32m+[m
+[32m+[m[32m    {search && ([m
+[32m+[m[32m      <button[m
+[32m+[m[32m        onClick={() => setSearch("")}[m
+[32m+[m[32m        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"[m
+[32m+[m[32m      >[m
+[32m+[m[32m        ✕[m
+[32m+[m[32m      </button>[m
+[32m+[m[32m    )}[m
+[32m+[m[32m  </div>[m
+[32m+[m[32m</div>[m
+[32m+[m
+[32m+[m
+[32m+[m[32m      {/* TABLE */}[m
+[32m+[m[32m      <div className="rounded-xl border bg-background">[m
+[32m+[m[32m        <Table>[m
+[32m+[m[32m          <TableHeader>[m
+[32m+[m[32m            <TableRow>[m
+[32m+[m[32m                <TableHead className="italic text-muted-foreground">#</TableHead>[m
+[32m+[m[32m                <TableHead className="italic text-muted-foreground">Title</TableHead>[m
+[32m+[m[32m                <TableHead className="italic text-muted-foreground">Host</TableHead>[m
+[32m+[m[32m                <TableHead className="italic text-muted-foreground">Status</TableHead>[m
+[32m+[m[32m                <TableHead className="italic text-muted-foreground">View</TableHead>[m
+[32m+[m[32m            </TableRow>[m
+[32m+[m[32m          </TableHeader>[m
+[32m+[m
+[32m+[m[32m          <TableBody>[m
+[32m+[m[32m  {loading ? ([m
+[32m+[m[32m    <TableRow>[m
+[32m+[m[32m      <TableCell colSpan={5} className="text-center py-6">[m
+[32m+[m[32m        Loading...[m
+[32m+[m[32m      </TableCell>[m
+[32m+[m[32m    </TableRow>[m
+[32m+[m[32m  ) : filteredListings.length === 0 ? ([m
+[32m+[m[32m    <TableRow>[m
+[32m+[m[32m      <TableCell colSpan={5} className="text-center py-6 text-sm text-gray-500">[m
+[32m+[m[32m        No listing found.[m
+[32m+[m[32m      </TableCell>[m
+[32m+[m[32m    </TableRow>[m
+[32m+[m[32m  ) : ([m
+[32m+[m[32m    filteredListings.map((listing, index) => ([m
+[32m+[m[32m      <TableRow key={listing.id}>[m
+[32m+[m[32m        <TableCell>{index + 1}</TableCell>[m
+[32m+[m[32m        <TableCell>{listing.title}</TableCell>[m
+[32m+[m[32m        <TableCell>[m
+[32m+[m[32m          {listing.host?.full_name ?? "Unknown"}[m
+[32m+[m[32m        </TableCell>[m
+[32m+[m[32m        <TableCell>[m
+[32m+[m[32m          <StatusBadge status={listing.status} />[m
+[32m+[m[32m        </TableCell>[m
+[32m+[m[32m        <TableCell>[m
+[32m+[m[32m          <button[m
+[32m+[m[32m            onClick={() => setSelectedListing(listing)}[m
+[32m+[m[32m            className="p-2 hover:bg-muted rounded-md"[m
+[32m+[m[32m          >[m
+[32m+[m[32m            <Eye className="w-5 h-5" />[m
+[32m+[m[32m          </button>[m
+[32m+[m[32m        </TableCell>[m
+[32m+[m[32m      </TableRow>[m
+[32m+[m[32m    ))[m
+[32m+[m[32m  )}[m
+[32m+[m[32m</TableBody>[m
+[32m+[m[32m        </Table>[m
+[32m+[m[32m      </div>[m
+[32m+[m
+[32m+[m[32m      {/* DETAIL MODAL */}[m
+[32m+[m[32m      {selectedListing && ([m
+[32m+[m[32m        <div[m
+[32m+[m[32m          className="fixed inset-0 bg-black/70 z-50 flex justify-center items-start overflow-y-auto"[m
+[32m+[m[32m          onClick={() => setSelectedListing(null)}[m
+[32m+[m[32m        >[m
+[32m+[m[32m          <div[m
+[32m+[m[32m            className="bg-white w-full max-w-3xl mt-10 mb-10 p-6 rounded-xl relative"[m
+[32m+[m[32m            onClick={(e) => e.stopPropagation()}[m
+[32m+[m[32m          >[m
+[32m+[m[32m            <button[m
+[32m+[m[32m              onClick={() => setSelectedListing(null)}[m
+[32m+[m[32m              className="absolute top-4 right-4"[m
+[32m+[m[32m            >[m
+[32m+[m[32m              <X />[m
+[32m+[m[32m            </button>[m
+[32m+[m
+[32m+[m[32m            <h2 className="text-2xl font-bold mb-4">[m
+[32m+[m[32m              {selectedListing.title}[m
+[32m+[m[32m            </h2>[m
+[32m+[m
+[32m+[m[32m            {/* GALLERY */}[m
+[32m+[m[32m            {selectedListing.images?.length > 0 && ([m
+[32m+[m[32m              <div className="grid grid-cols-5 gap-2 mt-3">[m
+[32m+[m[32m                {selectedListing.
