@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import { Profile } from "../types/profile";
+import { Profile } from "@/src/types/profile";
 
 export const getAllHosts = async () => {
   const { data, error } = await supabase
