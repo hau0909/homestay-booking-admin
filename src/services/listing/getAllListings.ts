@@ -5,6 +5,7 @@ import { Profile } from "@/src/types/profile";
 import { Home } from "@/src/types/home";
 import { Amenity } from "@/src/types/amenity";
 import { Fee } from "@/src/types/fee";
+import { Rule } from "@/src/types/rule";
 
 
 export type ListingWithHost = Listing & {
@@ -19,6 +20,10 @@ export type ListingWithHost = Listing & {
 
   listing_amenities: {
     amenity: Amenity;
+  }[];
+
+ listing_rules: {
+    rule: Rule;
   }[];
 
   fees: Fee[];
@@ -41,6 +46,9 @@ export async function getAllListings(): Promise<ListingWithHost[]> {
       homes (*),
       listing_amenities (
         amenity:amenities (*)
+      ),
+      listing_rules (
+        rule:rules (*)
       ),
       fees (*)
     `)
