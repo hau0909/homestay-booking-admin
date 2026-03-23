@@ -28,7 +28,6 @@ export const approveOrRejectHostRequest = async (
       .eq("id", userId);
 
     if (profileError) {
-      console.log("PROFILE ERROR:", profileError);
       throw profileError;
     }
   }
