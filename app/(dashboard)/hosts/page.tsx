@@ -8,6 +8,7 @@ import {
 import Avatar from "@/src/components/common/Avatars";
 import { PhoneCall, Mail, IdCard } from "lucide-react";
 import { approveOrRejectHostRequest } from "@/src/services/host/approveOrRejectRequest.service";
+import { allowUserToResubmit } from "@/src/services/host/allowResubmit";
 import toast from "react-hot-toast";
 
 const Page = () => {
@@ -72,6 +73,29 @@ const Page = () => {
       console.log(error);
     } finally {
       setProcessing(false);
+    }
+  };
+
+  const handleAllowResubmit = async (action: "resubmit") => {
+    if (!selectedRequest) return;
+    try {
+      setProcessing(true);
+
+      await allowUserToResubmit(
+        action,
+        selectedRequest.id,
+        selectedRequest.user_id,
+      );
+
+      setRequest((prev) =>
+        prev.map((item) =>
+          item.id === selectedRequest.id ? { ...item, status: action } : item,
+        ),
+      );
+      setOpen(false);
+      toast.success("Allow User to Resubmit Successfully!");
+    } catch (error: any) {
+      toast.error(error);
     }
   };
 
@@ -200,6 +224,16 @@ const Page = () => {
                       REJECTED
                     </span>
                   )}
+                  {items.status === "request_again" && (
+                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
+                      REQUEST
+                    </span>
+                  )}
+                  {items.status === "resubmit" && (
+                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                      RESUBMIT
+                    </span>
+                  )}
                 </td>
 
                 <td className="px-4 py-3 text-center">
@@ -312,25 +346,22 @@ const Page = () => {
                     </div>
                   </>
                 )}
-
-                {/* {selectedRequest.status !== "pending" && (
-                  <div className="mt-6 flex gap-3">
-                    <button
-                      onClick={() => handleAction("approved")}
-                      className="flex-1 rounded-2xl bg-green-600 hover:bg-green-700 transition text-white py-3 font-medium"
-                    >
-                      {prosessing ? "Processing..." : "Approve"}
-                    </button>
-
-                    <button
-                      onClick={() => handleAction("rejected")}
-                      className="flex-1 rounded-2xl bg-green-600 hover:bg-green-700 transition text-white py-3 font-medium"
-                    >
-                      {prosessing ? "Processing..." : "Reject"}
-                    </button>
-                  </div>
-                )} */}
-
+                {selectedRequest.status === "request_again" && (
+                  <>
+                    <div className="mt-5 flex items-center gap-3">
+                      <span className="text-black font-bold">ACTION</span>
+                      <div className="flex-1 h-px bg-black"></div>
+                    </div>
+                    <div className="mt-6 flex gap-3">
+                      <button
+                        onClick={() => handleAllowResubmit("resubmit")}
+                        className="flex-1 rounded-2xl cursor-pointer bg-green-400 hover:bg-green-500 transition text-white py-3 font-medium"
+                      >
+                        {prosessing ? "Processing..." : "Allow Resubmit"}
+                      </button>
+                    </div>
+                  </>
+                )}
                 {/* Action */}
                 <button
                   onClick={() => setOpen(false)}
