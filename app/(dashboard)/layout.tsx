@@ -11,6 +11,7 @@ import {
   Settings,
   Ticket,
   User2,
+  Image as ImageIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -74,6 +75,7 @@ export default function DashboardLayout({
             indicator="1"
             icon={<MessageSquareWarning />}
           />
+          <SidebarItem label="Banner" link="/banner" icon={<ImageIcon />} />
           <SidebarItem label="Settings" link="/settings" icon={<Settings />} />
           <SidebarItem label="Test" link="/test" icon={<Cat />} />
         </nav>
