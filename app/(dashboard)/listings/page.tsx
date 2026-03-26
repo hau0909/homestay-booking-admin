@@ -66,7 +66,7 @@ export default function AdminListingsPage() {
     try {
       setLoading(true);
       const data = await getAllListings();
-      setListings(data);
+      setListings(data.filter((listing) => listing.status !== "DRAFT"));
     } catch (error) {
       console.error("Failed to load listings:", error);
       toast.error("Failed to load listings");
@@ -613,7 +613,7 @@ export default function AdminListingsPage() {
                 </div>
               )}
 
-              {selectedListing.status === "ACTIVE" && (
+              {(selectedListing.status === "ACTIVE" || selectedListing.status === "HIDDEN") && (
                 <div className="flex gap-4">
                   <Button
                     variant="destructive"
