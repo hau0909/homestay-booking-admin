@@ -52,32 +52,15 @@ export default function DashboardLayout({
         <nav className="flex-1 p-4 space-y-3 text-sm">
           <SidebarItem label="Dashboard" link="/" icon={<Gauge />} />
           <SidebarItem label="Users" link="/users" icon={<User2 />} />
-          <SidebarItem
-            label="Listings"
-            link="/listings"
-            indicator="3"
-            icon={<Ticket />}
-          />
-          <SidebarItem
-            label="Hosts"
-            link="/hosts"
-            indicator="2"
-            icon={<Contact2 />}
-          />
+          <SidebarItem label="Listings" link="/listings" icon={<Ticket />} />
+          <SidebarItem label="Hosts" link="/hosts" icon={<Contact2 />} />
           <SidebarItem
             label="Bookings"
             link="/bookings"
             icon={<ClipboardList />}
           />
-          <SidebarItem
-            label="Reports"
-            link="/reports"
-            indicator="1"
-            icon={<MessageSquareWarning />}
-          />
+
           <SidebarItem label="Banner" link="/banner" icon={<ImageIcon />} />
-          <SidebarItem label="Settings" link="/settings" icon={<Settings />} />
-          <SidebarItem label="Test" link="/test" icon={<Cat />} />
         </nav>
       </aside>
 
