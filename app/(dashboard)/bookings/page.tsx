@@ -64,10 +64,7 @@ export default function AdminBookingsPage() {
   });
 
   const filteredLogs = bookingLogs.filter((log) => {
-    return (
-      log.booking_id.toString().includes(search.toLowerCase()) ||
-      log.id.toString().includes(search.toLowerCase())
-    );
+    return log.booking_id.toString().includes(search.toLowerCase());
   });
 
   return (

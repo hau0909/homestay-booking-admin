@@ -44,7 +44,8 @@ export async function getAllBookings(): Promise<BookingWithDetails[]> {
         )
       )
     `)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .neq("status", "DRAFT");
 
   if (error) {
     console.error("Error fetching all bookings:", error);

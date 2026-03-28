@@ -54,7 +54,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   ]);
 
   const listings = listingsRes.data ?? [];
-  const bookings = bookingsRes.data ?? [];
+  const bookings = (bookingsRes.data ?? []).filter((b) => b.status !== "DRAFT");
 
   return {
     totalUsers: usersRes.count ?? 0,
@@ -93,6 +93,7 @@ export async function getRecentBookings(limit = 8): Promise<RecentBooking[]> {
       )
     `)
     .order("created_at", { ascending: false })
+    .neq("status", "DRAFT")
     .limit(limit);
 
   if (error) {
